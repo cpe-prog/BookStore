@@ -29,6 +29,7 @@ internal abstract class Program
         }
     }
 
+    
     [Obsolete("Obsolete")]
     private static void AddBooks()
     {
@@ -60,15 +61,16 @@ internal abstract class Program
                 break;
             }
         }
-
+        
         var json = JsonConvert.SerializeObject(books, Formatting.Indented);
         var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Library.json");
         File.WriteAllText(path, json);
-
+        
         var table = new Table();
-        table.AddColumn("ID");
-        table.AddColumn("Title");
-        table.AddColumn("Author");
+        table.AddColumn("[yellow]ID[/]");
+        table.AddColumn("[red]Title[/]");
+        table.AddColumn("[green]Author[/]");
+
 
         foreach (var book in books)
         {
