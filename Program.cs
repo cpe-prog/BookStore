@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Spectre.Console;
+﻿using Spectre.Console;
 using static Spectre.Console.AnsiConsole;
 using Console = System.Console;
 
@@ -62,21 +61,17 @@ internal abstract class Program
             }
         }
         
-        var json = JsonConvert.SerializeObject(books, Formatting.Indented);
-        var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Library.json");
-        File.WriteAllText(path, json);
-        
         var table = new Table();
+        table.AddColumn("[orange]#[/]");
         table.AddColumn("[yellow]ID[/]");
         table.AddColumn("[red]Title[/]");
         table.AddColumn("[green]Author[/]");
 
 
-        foreach (var book in books)
+        for (var i = 0; i < books.Count; i++)
         {
-            table.AddRow(book.Id.ToString(), book.Title!, book.Author!);
+            table.AddRow((i + 1).ToString(), books[i].Id.ToString(), books[i].Title!, books[i].Author!);
         }
-
         Render(table);
     }
 }
