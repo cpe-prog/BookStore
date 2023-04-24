@@ -1,4 +1,6 @@
-﻿using Spectre.Console;
+﻿using System.Text.Json;
+using BookStore.CommandBase;
+using Spectre.Console;
 using static Spectre.Console.AnsiConsole;
 using Console = System.Console;
 
@@ -6,9 +8,18 @@ namespace BookStore;
 
 internal abstract class Program
 {
-    [Obsolete("Obsolete")]
+    public Dictionary<string, object> Books = new()
+    {
+        { "add", new AddCommand() },
+        { "edit", new EditCommand() },
+        { "delete", new DeleteCommand() },
+        { "list", new ListCommand()},
+    };
+    
     private static void Main(string[] args)
     {
+        var db = JsonSerializer.Serialize("Library.json");
+        
         if (args.Length == 0)
         {
             return;
@@ -29,14 +40,13 @@ internal abstract class Program
     }
 
     
-    [Obsolete("Obsolete")]
     private static void AddBooks()
     {
-        var books = new List<Book>();
+        var books = new List<Books>();
 
         while (true)
         {
-            var book = new Book();
+            var book = new Books();
 
             Console.Write("Title: ");
             book.Title = Console.ReadLine();
@@ -51,9 +61,8 @@ internal abstract class Program
                 continue;
             }
             book.Id = id;
-
             books.Add(book);
-
+            
             Console.Write("Add another book? (y/n): ");
             if (Console.ReadLine()!.ToLower() != "y")
             {
@@ -62,16 +71,14 @@ internal abstract class Program
         }
         
         var table = new Table();
-        table.AddColumn("[orange]#[/]");
-        table.AddColumn("[yellow]ID[/]");
-        table.AddColumn("[red]Title[/]");
-        table.AddColumn("[green]Author[/]");
-
-
+        table.AddColumns(new TableColumn("[navy]#[/]"), new TableColumn("[yellow]ID[/]"), new TableColumn("[red]Title[/]"), new TableColumn("[aqua]Author[/]"));
+        
         for (var i = 0; i < books.Count; i++)
         {
             table.AddRow((i + 1).ToString(), books[i].Id.ToString(), books[i].Title!, books[i].Author!);
         }
-        Render(table);
+        Write(table);
     }
+
+   
 }
